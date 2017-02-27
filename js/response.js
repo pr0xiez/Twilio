@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * @class Response
  * @author Alex Hall <alex.hall@united-installs.com>
@@ -12,8 +14,10 @@ function Response() {
      * @returns {String}
      */
     function getResponse() {
-        return date.toLocaleString();
+        return 'test';
     }
 
     return { getResponse };
 }
+
+module.exports = Response;

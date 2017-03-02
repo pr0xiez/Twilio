@@ -1,6 +1,7 @@
 "use strict";
 
 // for dev purposes only
-const response = require("./response");
+const Response = require("./response");
+const response = new Response();
 
 console.log(response.getResponse());

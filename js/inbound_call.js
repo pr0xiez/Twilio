@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * @author Alex Hall <alex.hall@united-installs.com>
+ * @description Handles incoming calls made to Twilio number
+ */
+
 const http = require('http');
 const twilio = require('twilio');
 const response = require("./response");

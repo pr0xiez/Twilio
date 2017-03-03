@@ -7,13 +7,13 @@
 
 const http = require('http');
 const twilio = require('twilio');
-const response = require("./response");
+const greeting = require("./greeting");
 
 
 http.createServer((req, res) => {
   const twiml = new twilio.TwimlResponse();
 
-  twiml.say(response.getResponse());
+  twiml.say(response.getGreeting());
 
   res.writeHead(200, {'Content-Type': 'text/xml'}); // web server details with status code 200
 

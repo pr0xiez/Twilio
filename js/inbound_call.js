@@ -9,8 +9,8 @@
 const urlencoded = require('body-parser').urlencoded;
 const express = require('express');
 const twilio = require('twilio');
-// project exports
-const greeting = require("./greeting");
+// project imports
+const _response = require("./response");
 
 
 let app = express();
@@ -25,7 +25,7 @@ app.post('/voice', (request, response) => {
     numDigits: 1,
     action: '/gather'
   }, (gatherNode) => {
-    gatherNode.say(greeting.getGreeting());
+    gatherNode.say(_response.getGreeting());
   });
 
   // If the user doesn't enter input, loop
@@ -44,8 +44,8 @@ app.post('/gather', (request, response) => {
   // If the user entered digits, process their request
   if (request.body.Digits) {
     switch (request.body.Digits) {
-      case '1': twiml.say('You selected sales. Good for you!'); break;
-      case '2': twiml.say('You need support. We will help!'); break;
+      case '1': twiml.say(_response.getInstallationsResponse()); break;
+      case '3': twiml.say(_response.getAccountingResponse()); break;
       default: 
         twiml.say('Sorry, I don\'t understand that choice.').pause();
         twiml.redirect('/voice');

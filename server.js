@@ -34,12 +34,10 @@ app.post('/voice', function(request, response) {
   // Use the Twilio Node.js SDK to build an XML response
   let twiml = new twilio.TwimlResponse();
 
-  twiml.gather({ 
-    numDigits: 1,
-    action: '/gather'
-  }, function (gatherNode) {
-    gatherNode.say(_response.getGreeting());
-  });
+  twiml.gather({ numDigits: 1, action: '/gather_purpose_response'},
+    function (gatherNode) {
+      gatherNode.say(_response.getGreeting());
+    });
 
   // If the user doesn't enter input, loop
   twiml.redirect('/voice');
@@ -50,15 +48,71 @@ app.post('/voice', function(request, response) {
 });
 
 // Create a route that will handle <Gather> input
-app.post('/gather', function(request, response) {
+app.post('/gather_purpose_response', function(request, response) {
   // Use the Twilio Node.js SDK to build an XML response
   let twiml = new twilio.TwimlResponse();
 
   // If the user entered digits, process their request
   if (request.body.Digits) {
     switch (request.body.Digits) {
-      case '1': twiml.say(_response.getInstallationsResponse()); break;
-      case '3': twiml.say(_response.getAccountingResponse()); break;
+      case '1': twiml.gather({ numDigits: 1, action: '/gather_install_response'},
+                  function (gatherNode) {
+                    gatherNode.say(_response.getInstallationsResponse());
+                  });
+                break;
+      case '3': twiml.gather({ numDigits: 1, action: '/gather_accounting_response'},
+                  function (gatherNode) {
+                    gatherNode.say(_response.getAccountingResponse());
+                  });
+                break;
+      default: 
+        twiml.say('Sorry, I don\'t understand that choice.').pause();
+        twiml.redirect('/voice');
+        break;
+    }
+  } else {
+    // If no input was sent, redirect to the /voice route
+    twiml.redirect('/voice');
+  }
+
+  // Render the response as XML in reply to the webhook request
+  response.type('text/xml');
+  response.send(twiml.toString());
+});
+
+app.post('/gather_install_response', function(request, response) {
+  // Use the Twilio Node.js SDK to build an XML response
+  let twiml = new twilio.TwimlResponse();
+
+  // If the user entered digits, process their request
+  if (request.body.Digits) {
+    switch (request.body.Digits) {
+      case '1': break; //TODO
+      case '3': break; //TODO
+      default: 
+        twiml.say('Sorry, I don\'t understand that choice.').pause();
+        twiml.redirect('/voice');
+        break;
+    }
+  } else {
+    // If no input was sent, redirect to the /voice route
+    twiml.redirect('/voice');
+  }
+
+  // Render the response as XML in reply to the webhook request
+  response.type('text/xml');
+  response.send(twiml.toString());
+});
+
+app.post('/gather_accounting_response', function(request, response) {
+  // Use the Twilio Node.js SDK to build an XML response
+  let twiml = new twilio.TwimlResponse();
+
+  // If the user entered digits, process their request
+  if (request.body.Digits) {
+    switch (request.body.Digits) {
+      case '1': break; //TODO
+      case '3': break; //TODO
       default: 
         twiml.say('Sorry, I don\'t understand that choice.').pause();
         twiml.redirect('/voice');

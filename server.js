@@ -15,29 +15,29 @@ const _response = require("./js/response");
 
 let app = express();
 app.use(urlencoded({ extended: false }));
-app.use(express.static('Twilio'));
+//app.use(express.static('Twilio'));
 
 /**
  * @author Alex Hall <alex.hall@united-installs.com>
  * @description Handles requests made to our web application from a User
  */
-app.get('/index.html', function (req, res) {
-   res.sendFile( __dirname + "/" + "index.html" );
-})
+app.get('/', function(request, response) {
+   response.sendFile( __dirname + "/" + "index.html" );
+});
 
 
 /**
  * @author Alex Hall <alex.hall@united-installs.com>
  * @description Handles an incoming call made to United Installs Twilio phone number
  */
-app.post('/voice', (request, response) => {
+app.post('/voice', function(request, response) {
   // Use the Twilio Node.js SDK to build an XML response
   let twiml = new twilio.TwimlResponse();
 
   twiml.gather({ 
     numDigits: 1,
     action: '/gather'
-  }, (gatherNode) => {
+  }, function (gatherNode) {
     gatherNode.say(_response.getGreeting());
   });
 
@@ -50,7 +50,7 @@ app.post('/voice', (request, response) => {
 });
 
 // Create a route that will handle <Gather> input
-app.post('/gather', (request, response) => {
+app.post('/gather', function(request, response) {
   // Use the Twilio Node.js SDK to build an XML response
   let twiml = new twilio.TwimlResponse();
 

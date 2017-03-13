@@ -15,7 +15,7 @@ const _response = require("./js/response");
 
 let app = express();
 app.use(urlencoded({ extended: false }));
-//app.use(express.static('Twilio'));
+//app.use(express.static('Twilio')); // DO I NEED THIS?? LOL
 
 /**
  * @author Alex Hall <alex.hall@united-installs.com>

@@ -2,7 +2,7 @@
 
 /**
  * @author Alex Hall <alex.hall@united-installs.com>
- * @description Handles incoming calls made to Twilio number
+ * @description United Installs Twilio Web Application
  */
 
 // outside dependencies
@@ -10,13 +10,26 @@ const urlencoded = require('body-parser').urlencoded;
 const express = require('express');
 const twilio = require('twilio');
 // project imports
-const _response = require("./response");
+const _response = require("./js/response");
 
 
 let app = express();
-
 app.use(urlencoded({ extended: false }));
+app.use(express.static('Twilio'));
 
+/**
+ * @author Alex Hall <alex.hall@united-installs.com>
+ * @description Handles requests made to our web application from a User
+ */
+app.get('/index.html', function (req, res) {
+   res.sendFile( __dirname + "/" + "index.html" );
+})
+
+
+/**
+ * @author Alex Hall <alex.hall@united-installs.com>
+ * @description Handles an incoming call made to United Installs Twilio phone number
+ */
 app.post('/voice', (request, response) => {
   // Use the Twilio Node.js SDK to build an XML response
   let twiml = new twilio.TwimlResponse();

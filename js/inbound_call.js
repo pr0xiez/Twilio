@@ -5,20 +5,60 @@
  * @description Handles incoming calls made to Twilio number
  */
 
-const http = require('http');
+// outside dependencies
+const urlencoded = require('body-parser').urlencoded;
+const express = require('express');
 const twilio = require('twilio');
+// project exports
 const greeting = require("./greeting");
 
 
-http.createServer((req, res) => {
-  const twiml = new twilio.TwimlResponse();
+let app = express();
 
-  twiml.say(response.getGreeting());
+app.use(urlencoded({ extended: false }));
 
-  res.writeHead(200, {'Content-Type': 'text/xml'}); // web server details with status code 200
+app.post('/voice', (request, response) => {
+  // Use the Twilio Node.js SDK to build an XML response
+  let twiml = new twilio.TwimlResponse();
 
-  res.end(twiml.toString()); // converts string from TwiML response to TwiML
-})
-.listen(1337, '127.0.0.1'); // port, IP address of web server
+  twiml.gather({ 
+    numDigits: 1,
+    action: '/gather'
+  }, (gatherNode) => {
+    gatherNode.say(greeting.getGreeting());
+  });
 
-console.log('TwiML server running at http://127.0.0.1:1337/');
+  // If the user doesn't enter input, loop
+  twiml.redirect('/voice');
+
+  // Render the response as XML in reply to the webhook request
+  response.type('text/xml');
+  response.send(twiml.toString());
+});
+
+// Create a route that will handle <Gather> input
+app.post('/gather', (request, response) => {
+  // Use the Twilio Node.js SDK to build an XML response
+  let twiml = new twilio.TwimlResponse();
+
+  // If the user entered digits, process their request
+  if (request.body.Digits) {
+    switch (request.body.Digits) {
+      case '1': twiml.say('You selected sales. Good for you!'); break;
+      case '2': twiml.say('You need support. We will help!'); break;
+      default: 
+        twiml.say('Sorry, I don\'t understand that choice.').pause();
+        twiml.redirect('/voice');
+        break;
+    }
+  } else {
+    // If no input was sent, redirect to the /voice route
+    twiml.redirect('/voice');
+  }
+
+  // Render the response as XML in reply to the webhook request
+  response.type('text/xml');
+  response.send(twiml.toString());
+});
+
+app.listen(3000); // app open on port 3000

@@ -1,6 +1,6 @@
 "use strict";
 
 // FOR DEV PURPOSES ONLY!!
-const Response = require("./response");
+const greeting = require("./greeting");
 
-console.log(response.getResponse());
+console.log(greeting.getGreeting());

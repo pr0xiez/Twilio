@@ -21,7 +21,7 @@ const date = new Date();
 * @description returns the correct response to be played back to the caller based on the date and time of day
 * @returns {String}
 */
-exports.getGreeting = function() {
+exports.getGreeting = () => {
   if (IsHoliday()) {
     return holidayResponse;
   }
@@ -36,11 +36,11 @@ exports.getGreeting = function() {
   }
 };
 
-exports.getInstallationsResponse = function() {
-  return installationsResponse;
+exports.getInstallationsResponse = () => { 
+  return installationsResponse
 }
 
-exports.getAccountingResponse = function() {
+exports.getAccountingResponse = () => {
   return accountingResponse;
 }
 
